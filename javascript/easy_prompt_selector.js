@@ -130,6 +130,7 @@ class EasyPromptSelector {
     this.visible = false;
     this.toNegative = false;
     this.tags = undefined;
+    this.adjustiveLast = false;
   }
 
   async init() {
@@ -248,7 +249,11 @@ class EasyPromptSelector {
         const randomKey = `${prefix}:${key}`;
 
         if (typeof values === "string") {
-          return this.renderTagButton(key, values, "secondary");
+          return this.renderTagButton(
+            values.trim().endsWith("*") ? key + ":" : key,
+            values,
+            "secondary"
+          );
         }
 
         const fields = EPSElementBuilder.tagFields();
@@ -293,15 +298,19 @@ class EasyPromptSelector {
   addTag(tag, toNegative = false) {
     const id = toNegative ? "txt2img_neg_prompt" : "txt2img_prompt";
     const textarea = gradioApp().getElementById(id).querySelector("textarea");
+    const tagToAdd = tag.trim().replace(/\*$/, "");
 
     if (textarea.value.trim() === "") {
-      textarea.value = tag;
+      textarea.value = tagToAdd;
+    } else if (this.adjustiveLast) {
+      textarea.value += " " + tagToAdd;
     } else if (textarea.value.trim().endsWith(",")) {
-      textarea.value += " " + tag;
+      textarea.value += " " + tagToAdd;
     } else {
-      textarea.value += ", " + tag;
+      textarea.value += ", " + tagToAdd;
     }
 
+    this.adjustiveLast = tag.trim().endsWith("*");
     updateInput(textarea);
   }
 
