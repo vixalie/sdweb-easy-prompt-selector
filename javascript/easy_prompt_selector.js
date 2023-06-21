@@ -130,7 +130,7 @@ class EasyPromptSelector {
     this.visible = false;
     this.toNegative = false;
     this.tags = undefined;
-    this.adjustiveLast = false;
+    this.adjectiveLast = false;
   }
 
   async init() {
@@ -302,7 +302,7 @@ class EasyPromptSelector {
 
     if (textarea.value.trim() === "") {
       textarea.value = tagToAdd;
-    } else if (this.adjustiveLast) {
+    } else if (this.adjectiveLast) {
       textarea.value += " " + tagToAdd;
     } else if (textarea.value.trim().endsWith(",")) {
       textarea.value += " " + tagToAdd;
@@ -310,7 +310,7 @@ class EasyPromptSelector {
       textarea.value += ", " + tagToAdd;
     }
 
-    this.adjustiveLast = tag.trim().endsWith("*");
+    this.adjectiveLast = tag.trim().endsWith("*");
     updateInput(textarea);
   }
 
