@@ -90,13 +90,14 @@ class EPSElementBuilder {
     return select
   }
 
-  static checkbox(text, { onChange }) {
+  static checkbox(text, { id, onChange }) {
     const label = document.createElement('label')
     label.style.display = 'flex'
     label.style.alignItems = 'center'
 
     const checkbox = gradioApp().querySelector('input[type=checkbox]').cloneNode()
     checkbox.checked = false
+    checkbox.id = id
     checkbox.addEventListener('change', (event) => {
        onChange(event.target.checked)
     })
@@ -118,6 +119,7 @@ class EasyPromptSelector {
   SELECT_ID = 'easy-prompt-selector-select'
   CONTENT_ID = 'easy-prompt-selector-content'
   TO_NEGATIVE_PROMPT_ID = 'easy-prompt-selector-to-negative-prompt'
+  TO_CLIPBOARD_ID = 'easy-prompt-selector-to-clipboard'
 
   constructor(yaml, gradioApp) {
     this.yaml = yaml
@@ -126,6 +128,7 @@ class EasyPromptSelector {
     this.toNegative = false
     this.tags = undefined
     this.adjectiveLast = false
+    this.toClipboard = false
   }
 
   async init() {
@@ -181,10 +184,27 @@ class EasyPromptSelector {
 
     const settings = document.createElement('div')
     const checkbox = EPSElementBuilder.checkbox('Add to Negatives', {
-      onChange: (checked) => { this.toNegative = checked }
+      id: this.TO_NEGATIVE_PROMPT_ID,
+      onChange: (checked) => { 
+        const clipCheck = gradioApp().querySelector(`#${this.TO_CLIPBOARD_ID}`)
+        clipCheck.checked = false
+        this.toNegative = checked 
+      }
+    })
+    const toClipboardCheckbox = EPSElementBuilder.checkbox('Copy to Clipboard', {
+      id: this.TO_CLIPBOARD_ID,
+      onChange: (checked) => { 
+        const negCheck = gradioApp().querySelector(`#${this.TO_NEGATIVE_PROMPT_ID}`)
+        negCheck.checked = false
+        this.toClipboard = checked 
+      }
     })
     settings.style.flex = '1'
+    settings.style.display = 'flex'
+    settings.style.flexDirection = 'row'
+    settings.style.justifyContent = 'space-evenly'
     settings.appendChild(checkbox)
+    settings.appendChild(toClipboardCheckbox)
 
     row.appendChild(settings)
 
@@ -296,6 +316,10 @@ class EasyPromptSelector {
     const textarea = gradioApp().getElementById(id).querySelector('textarea')
     const tagToAdd = tag.trim().replace(/\*$/, '')
 
+    if (this.toClipboard) {
+      navigator.clipboard.writeText(tagToAdd)
+      return
+    }
     if (textarea.value.trim() === '') {
       textarea.value = tagToAdd
     } else if (this.adjectiveLast) {
