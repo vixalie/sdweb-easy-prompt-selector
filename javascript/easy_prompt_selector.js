@@ -3,7 +3,7 @@ class EPSElementBuilder {
   static baseButton(text, { size = "sm", color = "primary" }) {
     const button = gradioApp().getElementById("txt2img_generate").cloneNode();
     button.id = "";
-    button.classList.remove("gr-button-lg", "gr-button-primary", "lg", "primary");
+    // button.classList.remove("gr-button-lg", "gr-button-primary", "lg", "primary");
     button.classList.add(
       // gradio 3.16
       `gr-button-${size}`,
