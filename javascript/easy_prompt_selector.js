@@ -62,6 +62,7 @@ class EPSElementBuilder {
     button.style.height = "2rem";
     button.style.flexGrow = "0";
     button.style.margin = "2px";
+    button.style.minWidth = "fit-content !important";
 
     button.addEventListener("click", onClick);
     button.addEventListener("contextmenu", onRightClick);
