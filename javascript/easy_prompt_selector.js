@@ -10,9 +10,9 @@ class EPSElementBuilder {
       `gr-button-${color}`,
       // gradio 3.22
       size,
-      color,
+      color
       // gradio 3.23
-      `tool`
+      // `tool`
     );
     button.textContent = text;
 
@@ -62,7 +62,7 @@ class EPSElementBuilder {
     button.style.height = "2rem";
     button.style.flexGrow = "0";
     button.style.margin = "2px";
-    button.style.minWidth = "fit-content !important";
+    button.style.width = "max-content !important";
 
     button.addEventListener("click", onClick);
     button.addEventListener("contextmenu", onRightClick);
